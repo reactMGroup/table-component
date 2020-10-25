@@ -5,14 +5,20 @@ const jsonData = require('../../files/mocked_contacts_list.json');
 
 class TableView extends Component {
     static defaultProps = {
-        header: 'Contacts list'
+        header: 'Contacts list',
+        fields: ['first_name', 'last_name', "email", "phone"],
+        columnCaptions: {
+            first_name: 'First Name',
+            last_name: 'Last Name',
+            email: "E-Mail",
+            phone: "Phone Number"
+        },
+        data: jsonData
     }
 
     constructor(props) {
         super(props);
-        this.rows = jsonData;
-        const fields = this.rows[0] ? Object.keys(this.rows[0]) : ['Empty table'];
-        this.columnCaptions = fields.map(fieldName => fieldName.toUpperCase());
+        this.state = { rows: props.data };
     }
 
     render() {
@@ -22,15 +28,15 @@ class TableView extends Component {
                 <table className="w3-table-all w3-card-4">
                     <thead>
                         <tr className="w3-light-blue">{
-                            this.columnCaptions.map(caption => <th>{caption}</th>)
+                            this.props.fields.map(field => <th>{this.props.columnCaptions[field]}</th>)
                         }
                         </tr>
                     </thead>
                     <tbody>{
-                        this.rows.map(jsonRow => {
+                        this.state.rows.map(jsonRow => {
                             return (<tr>{
-                                Object.values(jsonRow)
-                                    .map(fieldValue => <td>{fieldValue}</td>)
+                                this.props.fields
+                                    .map(field => <td>{jsonRow[field]}</td>)
                             }
                             </tr>);
                         }
